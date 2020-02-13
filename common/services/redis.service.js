@@ -6,7 +6,8 @@ rejson(redis);
 const config = require('../config/env.config')
 
 
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(config.redis.port);
+
 const connectWithRetry = async () => {
     await redisClient.on('connect', function(err) {
         if(err){

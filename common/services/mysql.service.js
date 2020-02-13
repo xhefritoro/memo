@@ -8,7 +8,7 @@ const options = {
     user: config.dbUser,
     password: config.dbPwd
 };
-const mysql = mysqlLib.createConnection(options);
+const mysql = mysqlLib.createConnection(config.mysql);
 
 
 

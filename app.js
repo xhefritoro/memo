@@ -30,8 +30,6 @@ app.use(function (req, res, next) {
 
 io.on('connect', (socket)=>{
     SocketRouter.routesConfig(socket);
-    
-
 })
 
 

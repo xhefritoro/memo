@@ -2,43 +2,39 @@ const SocketModel = require("../models/socket.model")
 
 
 // Returns attribute that notes will contain which will be retrieved from mysql currently mocked.
-exports.initData =(socket)=>{
+exports.initData =(socket, type)=>{
+    var response={};
+    // Generate id
+    response["id"] = Math.floor(Math.random() * 10000)
 
-    console.log("controller")
-    SocketModel.test();
-
-    socket.emit("init", //"Hello" );
-    [{"fields":[
-            "noteTitle",
-            "noteBody",
-            "noteDetails"
-    ]}]);
+    // Get fields based on type
+    SocketModel.initData(type).then((data)=>{
+        data.forEach(element => {
+            response[element.attributeKey]= element.attributeText;
+        })
+        socket.emit("init",response)
+    }).catch((err)=>{
+        socket.emit("init", err);
+    });
 
 }
 
 // Returns data for each note available on redis currently mocked.
-exports.getNotes =(socket)=>{
-    console.log("controller")
+exports.getNotes =(socket, id)=>{
+    SocketModel.getMemoById(id).then((data)=>{
+        socket.emit("getNotes",data);
+    }).catch((err)=>{
+        socket.emit("getNotes", err);
+    });
+}
 
-    socket.emit("getNotes", 
-    [
-        {
-            "noteTitle":"Example1",
-            "noteBody" : "This is a mocked test for front end",
-            "noteDetails": {
-                "timeStamp" : "mm-dd-yyyy T:hh:mm:ss",
-                "userAuthor" : "Mocking"
-            }
-        },
-        {
-            "noteTitle":"Example2",
-            "noteBody" : "This is a mocked test for front end",
-            "noteDetails": {
-                "timeStamp" : "mm-dd-yyyy T:hh:mm:ss",
-                "userAuthor" : "Mocking"
-            }
-        }
-    ]);
+exports.setNotes =(socket, data)=>{
+    let object = JSON.parse(data);
+        SocketModel.setMemo(object).then((rsp)=>{
+            socket.emit("setNotes", rsp);
+        }).catch((err)=>{
+            socket.emit("setNotes", err);
+        });
 }
 
 

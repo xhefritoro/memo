@@ -3,17 +3,20 @@ const SocketController = require('./controllers/socket.controller');
 
 exports.routesConfig = function (socket) {
 
-    socket.on("init", async function(test){
-        console.log(test)
-        console.log("init")
-        await SocketController.initData(socket);
+    socket.on("init", async function(type){
+        await SocketController.initData(socket, type);
         
     });
 
 
-    socket.on("getNotes", async function(){
-        console.log("getNotes")
-        await SocketController.getNotes(socket);
+    socket.on("getNotes", async function(id){
+        await SocketController.getNotes(socket,id);
+        
+    });
+
+
+    socket.on("setNotes", async function(data){
+        await SocketController.setNotes(socket,data);
         
     });
 }
