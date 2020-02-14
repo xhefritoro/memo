@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 
 
 const SocketRouter = require('./socket/routes.config');
-
+const UsersRouter = require('./Users/routes.config');
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -27,17 +27,17 @@ app.use(function (req, res, next) {
     }
 });
 
+SocketRouter.routesConfig(io)
 
-io.on('connect', (socket)=>{
-    SocketRouter.routesConfig(socket);
-})
-
+UsersRouter.routesConfig(app);
 
 app.use(bodyParser.json());
 
 
-
+app.listen(3000, function (){
+    console.log('app listening at port %s', 3000);
+}) 
 
 http.listen(config.port, function () {
-    console.log('app listening at port %s', config.port);
+    console.log('http listening at port %s', config.port);
 });
